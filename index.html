@@ -316,12 +316,26 @@ document.getElementById("dl-btn").addEventListener("click",function(){
     a.download="MENtality-Pledge-"+nm.replace(/\s+/g,"-")+".png";
     a.click();URL.revokeObjectURL(a.href);
   },"image/png");
-    // ── LOG DOWNLOAD TO GOOGLE SHEETS (GET method — CORS safe) ──
+      // ── LOG DOWNLOAD TO GOOGLE SHEETS (sendBeacon — most reliable) ──
   var SHEET_URL="https://script.google.com/macros/s/AKfycbzAe6TgvImd_RIBIL739eub_5IsJAtvqmIqmqA6xRQdCqdFc1_gd21h-d3BOMFEBrtx/exec";
   var ts=new Date().toLocaleString("en-NG",{timeZone:"Africa/Lagos",year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"});
   var pid=(new URLSearchParams(window.location.search).get("pid")||"unknown");
-  var getUrl=SHEET_URL+"?timestamp="+encodeURIComponent(ts)+"&name="+encodeURIComponent(nm)+"&items="+encodeURIComponent("[DOWNLOAD]")+"&count=download&participant_id="+encodeURIComponent(pid);
-  var img=new Image();img.src=getUrl;
+  var dlPayload=JSON.stringify({
+    timestamp:ts,
+    name:nm,
+    items:"[DOWNLOAD]",
+    count:"download",
+    participant_id:pid
+  });
+  if(navigator.sendBeacon){
+    var blob=new Blob([dlPayload],{type:"application/json"});
+    navigator.sendBeacon(SHEET_URL,blob);
+  } else {
+    var xhr=new XMLHttpRequest();
+    xhr.open("POST",SHEET_URL,true);
+    xhr.setRequestHeader("Content-Type","application/json");
+    xhr.send(dlPayload);
+  }
   // ── END DOWNLOAD LOG ──────────────────────────────────────────
 });
 </script>
