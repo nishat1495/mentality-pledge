@@ -316,7 +316,7 @@ document.getElementById("dl-btn").addEventListener("click",function(){
     a.download="MENtality-Pledge-"+nm.replace(/\s+/g,"-")+".png";
     a.click();URL.revokeObjectURL(a.href);
   },"image/png");
-  // ── LOG DOWNLOAD TO GOOGLE SHEETS (GET method — CORS safe) ──
+    // ── LOG DOWNLOAD TO GOOGLE SHEETS (GET method — CORS safe) ──
   var SHEET_URL="https://script.google.com/macros/s/AKfycbzAe6TgvImd_RIBIL739eub_5IsJAtvqmIqmqA6xRQdCqdFc1_gd21h-d3BOMFEBrtx/exec";
   var ts=new Date().toLocaleString("en-NG",{timeZone:"Africa/Lagos",year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"});
   var pid=(new URLSearchParams(window.location.search).get("pid")||"unknown");
