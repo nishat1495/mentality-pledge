@@ -54,7 +54,8 @@ a,button{transition:color var(--tr),background var(--tr),border-color var(--tr),
 .card-title{font-family:var(--fd);font-size:var(--lg);margin-bottom:1.25rem}
 .card-title em{font-style:italic;color:var(--primary)}
 .plist{list-style:none;display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.75rem}
-.pitem label{display:flex;gap:.875rem;cursor:pointer;padding:.875rem 1rem;border-radius:var(--r-lg);border:1.5px solid var(--border);background:var(--bg);align-items:flex-start;line-height:1.55;font-size:var(--sm)}
+.pitem label{display:flex;gap:.875rem;cursor:pointer;padding:.875rem 1rem;border-radius:var(--r-lg);border:1.5px solid var(--border);background:var(--bg);align-items:flex-start;line-height:1.7;font-size:var(--sm)}
+.pitem label span{display:block;padding-top:1px}
 .pitem input[type=checkbox]{appearance:none;-webkit-appearance:none;width:20px;height:20px;min-width:20px;border:2px solid var(--border);border-radius:5px;margin-top:1px;display:grid;place-content:center;background:var(--bg);transition:background var(--tr),border-color var(--tr)}
 .pitem input[type=checkbox]:checked{background:var(--primary);border-color:var(--primary)}
 .pitem input[type=checkbox]:checked::after{content:"";width:5px;height:9px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(42deg) translate(-1px,-1px)}
@@ -114,12 +115,42 @@ footer p{font-size:var(--xs);color:var(--faint)}
   <div id="form-state">
     <p class="card-title">I, as a Nigerian man, commit to…</p>
     <ul class="plist">
-      <li class="pitem"><label><input type="checkbox" name="pledge" value="emotions"> Having at least <strong>one honest conversation</strong> about my feelings with a man I trust this month</label></li>
-      <li class="pitem"><label><input type="checkbox" name="pledge" value="fatherhood"> Checking in on a <strong>younger man</strong> in my life — son, nephew, brother — and asking how he's really doing</label></li>
-      <li class="pitem"><label><input type="checkbox" name="pledge" value="challenge"> <strong>Challenging</strong> harmful comments about manhood when I hear them in my community</label></li>
-      <li class="pitem"><label><input type="checkbox" name="pledge" value="relationships"> Treating my partner and all women in my life with <strong>genuine respect and equality</strong></label></li>
-      <li class="pitem"><label><input type="checkbox" name="pledge" value="vulnerability"> Recognising that <strong>strength includes vulnerability</strong> — and living by that every day</label></li>
-      <li class="pitem"><label><input type="checkbox" name="pledge" value="mentalhealth"> Seeking help when I need it and <strong>never letting shame</strong> stand between me and support</label></li>
+      <li class="pitem">
+        <label>
+          <input type="checkbox" name="pledge" value="emotions">
+          <span><strong>Having</strong> at least one honest conversation about my feelings with a man I trust this month</span>
+        </label>
+      </li>
+      <li class="pitem">
+        <label>
+          <input type="checkbox" name="pledge" value="fatherhood">
+          <span><strong>Checking in</strong> on a younger man in my life — son, nephew, brother — and asking how he's really doing</span>
+        </label>
+      </li>
+      <li class="pitem">
+        <label>
+          <input type="checkbox" name="pledge" value="challenge">
+          <span><strong>Challenging</strong> harmful comments about manhood when I hear them in my community</span>
+        </label>
+      </li>
+      <li class="pitem">
+        <label>
+          <input type="checkbox" name="pledge" value="relationships">
+          <span><strong>Treating</strong> my partner and all women in my life with genuine respect and equality</span>
+        </label>
+      </li>
+      <li class="pitem">
+        <label>
+          <input type="checkbox" name="pledge" value="vulnerability">
+          <span><strong>Recognising</strong> that strength includes vulnerability — and living by that every day</span>
+        </label>
+      </li>
+      <li class="pitem">
+        <label>
+          <input type="checkbox" name="pledge" value="mentalhealth">
+          <span><strong>Seeking</strong> help when I need it and never letting shame stand between me and support</span>
+        </label>
+      </li>
     </ul>
     <div class="name-row">
       <label for="pname">Your first name</label>
@@ -285,6 +316,17 @@ document.getElementById("dl-btn").addEventListener("click",function(){
     a.download="MENtality-Pledge-"+nm.replace(/\s+/g,"-")+".png";
     a.click();URL.revokeObjectURL(a.href);
   },"image/png");
+  // ── LOG DOWNLOAD TO GOOGLE SHEETS ────────────────────────────
+  var SHEET_URL="https://script.google.com/macros/s/AKfycby2RZhdJ6TEar_Asi3mMXF33XF0T6KRWsskRaVwptGm0ebbkbywRuMCPgHhZGcixRlk/exec";
+  var dlData={
+    timestamp:new Date().toLocaleString("en-NG",{timeZone:"Africa/Lagos",year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"}),
+    name:nm,
+    items:"[DOWNLOAD]",
+    count:"download",
+    participant_id:(new URLSearchParams(window.location.search).get("pid")||"unknown")
+  };
+  fetch(SHEET_URL,{method:"POST",mode:"no-cors",body:JSON.stringify(dlData),headers:{"Content-Type":"application/json"}}).catch(function(err){console.warn("Download log failed:",err);});
+  // ── END DOWNLOAD LOG ──────────────────────────────────────────
 });
 </script>
 </body>
