@@ -209,17 +209,10 @@ subBtn.addEventListener("click",function(){
   document.getElementById("rct-ts").value=new Date().toISOString();
   var payload={type:"mentality_pledge",pledge_taken:"1",pledge_items:chosen.join(","),pledge_count:chosen.length,name:name,ts:new Date().toISOString()};
   if(window.parent&&window.parent!==window){window.parent.postMessage(payload,"*");}
-  // ── GOOGLE SHEETS LOGGING ─────────────────────────────────────
+  // ── GOOGLE SHEETS LOGGING ──────────────────────────────────
   var SHEET_URL="https://script.google.com/macros/s/AKfycbzAe6TgvImd_RIBIL739eub_5IsJAtvqmIqmqA6xRQdCqdFc1_gd21h-d3BOMFEBrtx/exec";
-  var logData={
-    timestamp:new Date().toLocaleString("en-NG",{timeZone:"Africa/Lagos",year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"}),
-    name:name,
-    items:chosen.join(", "),
-    count:chosen.length,
-    participant_id:(new URLSearchParams(window.location.search).get("pid")||"unknown")
-  };
-  fetch(SHEET_URL,{method:"POST",mode:"no-cors",body:JSON.stringify(logData),headers:{"Content-Type":"application/json"}}).catch(function(err){console.warn("Sheet log failed:",err);});
-  // ── END GOOGLE SHEETS LOGGING ─────────────────────────────────
+  logToSheet(SHEET_URL, getTS(), name, chosen.join(", "), chosen.length, getPid());
+  // ── END GOOGLE SHEETS LOGGING ────────────────────────────────
 
   if(typeof Qualtrics!=="undefined"&&Qualtrics.SurveyEngine){
     try{Qualtrics.SurveyEngine.addEmbeddedData("pledge_taken","1");}catch(e){}
@@ -316,28 +309,32 @@ document.getElementById("dl-btn").addEventListener("click",function(){
     a.download="MENtality-Pledge-"+nm.replace(/\s+/g,"-")+".png";
     a.click();URL.revokeObjectURL(a.href);
   },"image/png");
-      // ── LOG DOWNLOAD TO GOOGLE SHEETS (sendBeacon — most reliable) ──
-  var SHEET_URL="https://script.google.com/macros/s/AKfycbzAe6TgvImd_RIBIL739eub_5IsJAtvqmIqmqA6xRQdCqdFc1_gd21h-d3BOMFEBrtx/exec";
-  var ts=new Date().toLocaleString("en-NG",{timeZone:"Africa/Lagos",year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"});
-  var pid=(new URLSearchParams(window.location.search).get("pid")||"unknown");
-  var dlPayload=JSON.stringify({
-    timestamp:ts,
-    name:nm,
-    items:"[DOWNLOAD]",
-    count:"download",
-    participant_id:pid
-  });
-  if(navigator.sendBeacon){
-    var blob=new Blob([dlPayload],{type:"application/json"});
-    navigator.sendBeacon(SHEET_URL,blob);
-  } else {
-    var xhr=new XMLHttpRequest();
-    xhr.open("POST",SHEET_URL,true);
-    xhr.setRequestHeader("Content-Type","application/json");
-    xhr.send(dlPayload);
-  }
-  // ── END DOWNLOAD LOG ──────────────────────────────────────────
+  // ── LOG DOWNLOAD TO GOOGLE SHEETS ───────────────────────────
+  var SHEET_URL_DL="https://script.google.com/macros/s/AKfycbzAe6TgvImd_RIBIL739eub_5IsJAtvqmIqmqA6xRQdCqdFc1_gd21h-d3BOMFEBrtx/exec";
+  logToSheet(SHEET_URL_DL, getTS(), nm, "[DOWNLOAD]", "download", getPid());
+  // ── END DOWNLOAD LOG ─────────────────────────────────────────
 });
+
+function logToSheet(sheetUrl, timestamp, name, items, count, pid) {
+  var params = new URLSearchParams();
+  params.append("timestamp", timestamp);
+  params.append("name", name);
+  params.append("items", items);
+  params.append("count", String(count));
+  params.append("participant_id", pid);
+  fetch(sheetUrl, {
+    method: "POST",
+    mode: "no-cors",
+    body: params
+  }).catch(function(err){ console.warn("Log failed:", err); });
+}
+function getPid() {
+  var p = new URLSearchParams(window.location.search);
+  return p.get("uid") || p.get("pid") || p.get("participant_id") || p.get("RID") || p.get("respondent_id") || "unknown";
+}
+function getTS() {
+  return new Date().toLocaleString("en-NG", {timeZone:"Africa/Lagos",year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"});
+}
 </script>
 </body>
 </html>
