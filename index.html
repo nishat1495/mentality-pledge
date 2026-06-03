@@ -226,7 +226,7 @@ subBtn.addEventListener("click",function(){
       pledge_items:chosen.join(","),
       pledge_count:String(chosen.length),
       name:name,
-      participant_id:getPid(),
+      participant_id:"{{hidden:id}}",
       timestamp:getTS()
     });
     try{jatos.appendResultData(vLabData+"\n");}catch(e){console.warn("jatos.appendResultData failed:",e);}
