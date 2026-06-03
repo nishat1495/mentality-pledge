@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MENtality Pledge</title>
+<title>A personal commitment to positive change · Nigeria</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300..700&display=swap" rel="stylesheet">
@@ -95,19 +95,19 @@ footer p{font-size:var(--xs);color:var(--faint)}
 <div class="page">
 <header class="hdr">
   <div class="logo">
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-label="MENtality">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-label="A personal commitment to positive change · Nigeria">
       <rect width="36" height="36" rx="8" fill="var(--primary)"/>
       <text x="18" y="24" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="bold" fill="white" font-style="italic">M</text>
       <circle cx="27" cy="10" r="4" fill="white" opacity="0.25"/>
     </svg>
-    <div class="logo-txt">MENtality Hub<span>with Ebuka · Nigeria</span></div>
+    <div class="logo-txt">A personal commitment to positive change<span>Nigeria</span></div>
   </div>
   <button class="tbtn" data-theme-toggle aria-label="Toggle theme">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
   </button>
 </header>
 <div class="intro">
-  <div class="eyebrow">🎙️ MENtality Movement</div>
+  <div class="eyebrow">🤝 Positive Masculinity Initiative</div>
   <h1>Your pledge.<br><em>Your commitment.</em></h1>
   <p>Real conversations about manhood don't end here — they begin. Choose the commitments you're ready to keep and receive your personal pledge card.</p>
 </div>
@@ -169,7 +169,7 @@ footer p{font-size:var(--xs);color:var(--faint)}
     <p>Your pledge card is ready. Save it as a daily reminder of who you're committed to becoming.</p>
     <div class="preview-wrap">
       <p class="preview-lbl">Your pledge card</p>
-      <div class="cv-wrap"><canvas id="pledge-canvas" width="1080" height="600" aria-label="Your MENtality pledge card"></canvas></div>
+      <div class="cv-wrap"><canvas id="pledge-canvas" width="1080" height="600" aria-label="Your pledge card"></canvas></div>
       <button class="dl-btn" id="dl-btn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Download My Pledge Card
@@ -184,7 +184,7 @@ footer p{font-size:var(--xs);color:var(--faint)}
   <input type="hidden" id="rct-ts" value="">
 </div>
 <canvas id="pledge-canvas-full" width="1080" height="600" style="display:none"></canvas>
-<footer><p>MENtality Hub · Real Men, Real Conversations · Nigeria</p></footer>
+<footer><p>A personal commitment to positive change · Nigeria</p></footer>
 </div>
 <script>
 (function(){
@@ -256,8 +256,8 @@ function renderCard(name,lines){
   ctx.fillStyle=or;ctx.beginPath();ctx.arc(lx+20,ty+20,20,0,Math.PI*2);ctx.fill();
   ctx.fillStyle="#fff";ctx.font="italic bold 18px Georgia,serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("M",lx+20,ty+21);
   ctx.textAlign="left";ctx.textBaseline="alphabetic";
-  ctx.fillStyle=tx;ctx.font="italic 22px Georgia,serif";ctx.fillText("MENtality Hub",lx+48,ty+16);
-  ctx.fillStyle=mu;ctx.font="500 11px sans-serif";ctx.fillText("WITH EBUKA  \u2022  NIGERIA",lx+48,ty+33);
+  ctx.fillStyle=tx;ctx.font="italic 22px Georgia,serif";ctx.fillText("A personal commitment",lx+48,ty+16);
+  ctx.fillStyle=mu;ctx.font="500 11px sans-serif";ctx.fillText("TO POSITIVE CHANGE  \u2022  NIGERIA",lx+48,ty+33);
   ctx.strokeStyle=bo;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(lx,ty+54);ctx.lineTo(lx+420,ty+54);ctx.stroke();
   ctx.fillStyle=tx;ctx.font="italic 58px Georgia,serif";ctx.fillText("I Pledge.",lx,ty+124);
   ctx.fillStyle=or;ctx.font="700 22px sans-serif";ctx.fillText(name.toUpperCase(),lx,ty+158);
@@ -281,7 +281,7 @@ function renderCard(name,lines){
   ctx.beginPath();ctx.arc(cx2,cy2,78,0,Math.PI*2);ctx.fillStyle=or;ctx.globalAlpha=.08;ctx.fill();ctx.globalAlpha=1;
   ctx.save();ctx.translate(cx2,cy2);
   ctx.font="bold 10.5px sans-serif";ctx.fillStyle=or;ctx.textAlign="center";ctx.textBaseline="middle";
-  var arc="\u2022  MENTALITY PLEDGE  \u2022  NIGERIA  \u2022";
+  var arc="\u2022  MEN\'S PLEDGE  \u2022  NIGERIA  \u2022";
   var as=(2*Math.PI)/(arc.length*1.4),sa=-Math.PI/2;
   for(var j=0;j<arc.length;j++){var ang=sa+j*as;ctx.save();ctx.rotate(ang);ctx.translate(0,-70);ctx.rotate(Math.PI/2);ctx.fillText(arc[j],0,0);ctx.restore();}
   ctx.restore();
@@ -306,7 +306,7 @@ document.getElementById("dl-btn").addEventListener("click",function(){
   fc.toBlob(function(blob){
     var a=document.createElement("a");
     a.href=URL.createObjectURL(blob);
-    a.download="MENtality-Pledge-"+nm.replace(/\s+/g,"-")+".png";
+    a.download="MensPledge-"+nm.replace(/\s+/g,"-")+".png";
     a.click();URL.revokeObjectURL(a.href);
   },"image/png");
   // ── LOG DOWNLOAD TO GOOGLE SHEETS ───────────────────────────
