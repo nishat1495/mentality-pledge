@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Supporting positive change· Nigeria</title>
+<title>A personal commitment to positive change · Nigeria</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300..700&display=swap" rel="stylesheet">
@@ -219,6 +219,19 @@ subBtn.addEventListener("click",function(){
     try{Qualtrics.SurveyEngine.addEmbeddedData("pledge_items",chosen.join(","));}catch(e){}
     try{Qualtrics.SurveyEngine.addEmbeddedData("pledge_count",String(chosen.length));}catch(e){}
   }
+  // ── VIRTUAL LAB (JATOS) DATA SUBMISSION ───────────────────────
+  if(typeof jatos!=="undefined"){
+    var vLabData=JSON.stringify({
+      pledge_taken:"1",
+      pledge_items:chosen.join(","),
+      pledge_count:String(chosen.length),
+      name:name,
+      participant_id:getPid(),
+      timestamp:getTS()
+    });
+    try{jatos.appendResultData(vLabData+"\n");}catch(e){console.warn("jatos.appendResultData failed:",e);}
+  }
+  // ── END VIRTUAL LAB (JATOS) DATA SUBMISSION ───────────────────
   document.getElementById("form-state").style.display="none";
   var ss=document.getElementById("success-state");
   ss.style.display="block";
