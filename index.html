@@ -211,7 +211,7 @@ subBtn.addEventListener("click",function(){
   if(window.parent&&window.parent!==window){window.parent.postMessage(payload,"*");}
   // ── GOOGLE SHEETS LOGGING ──────────────────────────────────
   var SHEET_URL="https://script.google.com/macros/s/AKfycbxeoVa7Qgza18w1pBvWIPPXOBdZ4G_5GNE8yoiZoP35DRRlig-Jgey4Zla5MZEbvCiQ/exec";
-  logToSheet(SHEET_URL, getTS(), name, chosen.join(", "), chosen.length, getPid());
+  logToSheet(SHEET_URL, getTS(), name, chosen.join(", "), chosen.length, getPid(), "not downloaded");
   // ── END GOOGLE SHEETS LOGGING ────────────────────────────────
 
   if(typeof Qualtrics!=="undefined"&&Qualtrics.SurveyEngine){
@@ -226,7 +226,7 @@ subBtn.addEventListener("click",function(){
       pledge_items:chosen.join(","),
       pledge_count:String(chosen.length),
       name:name,
-      participant_id:"{{hidden:id}}",
+      participant_id:getPid(),
       timestamp:getTS()
     });
     try{jatos.appendResultData(vLabData+"\n");}catch(e){console.warn("jatos.appendResultData failed:",e);}
@@ -324,17 +324,18 @@ document.getElementById("dl-btn").addEventListener("click",function(){
   },"image/png");
   // ── LOG DOWNLOAD TO GOOGLE SHEETS ───────────────────────────
   var SHEET_URL_DL="https://script.google.com/macros/s/AKfycbxeoVa7Qgza18w1pBvWIPPXOBdZ4G_5GNE8yoiZoP35DRRlig-Jgey4Zla5MZEbvCiQ/exec";
-  logToSheet(SHEET_URL_DL, getTS(), nm, "[DOWNLOAD]", "download", getPid());
+  logToSheet(SHEET_URL_DL, getTS(), nm, "[DOWNLOAD]", "download", getPid(), "downloaded");
   // ── END DOWNLOAD LOG ─────────────────────────────────────────
 });
 
-function logToSheet(sheetUrl, timestamp, name, items, count, pid) {
+function logToSheet(sheetUrl, timestamp, name, items, count, pid, download_status) {
   var params = new URLSearchParams();
   params.append("timestamp", timestamp);
   params.append("name", name);
   params.append("items", items);
   params.append("count", String(count));
   params.append("participant_id", pid);
+  params.append("download_status", download_status || "not downloaded");
   fetch(sheetUrl, {
     method: "POST",
     mode: "no-cors",
