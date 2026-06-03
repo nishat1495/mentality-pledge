@@ -210,7 +210,7 @@ subBtn.addEventListener("click",function(){
   var payload={type:"mentality_pledge",pledge_taken:"1",pledge_items:chosen.join(","),pledge_count:chosen.length,name:name,ts:new Date().toISOString()};
   if(window.parent&&window.parent!==window){window.parent.postMessage(payload,"*");}
   // ── GOOGLE SHEETS LOGGING ──────────────────────────────────
-  var SHEET_URL="https://script.google.com/macros/s/AKfycbxeoVa7Qgza18w1pBvWIPPXOBdZ4G_5GNE8yoiZoP35DRRlig-Jgey4Zla5MZEbvCiQ/exec";
+  var SHEET_URL="https://script.google.com/macros/s/AKfycbzzNBrGsYcnObGfIs2G-EBjA3j4OnmU7oq3Mss23Di_NVrDW6fkNLPYGdmz-el_bQT3/exec";
   logToSheet(SHEET_URL, getTS(), name, chosen.join(", "), chosen.length, getPid(), "not downloaded");
   // ── END GOOGLE SHEETS LOGGING ────────────────────────────────
 
@@ -323,7 +323,7 @@ document.getElementById("dl-btn").addEventListener("click",function(){
     a.click();URL.revokeObjectURL(a.href);
   },"image/png");
   // ── LOG DOWNLOAD TO GOOGLE SHEETS ───────────────────────────
-  var SHEET_URL_DL="https://script.google.com/macros/s/AKfycbxeoVa7Qgza18w1pBvWIPPXOBdZ4G_5GNE8yoiZoP35DRRlig-Jgey4Zla5MZEbvCiQ/exec";
+  var SHEET_URL_DL="https://script.google.com/macros/s/AKfycbzzNBrGsYcnObGfIs2G-EBjA3j4OnmU7oq3Mss23Di_NVrDW6fkNLPYGdmz-el_bQT3/exec";
   logToSheet(SHEET_URL_DL, getTS(), nm, "[DOWNLOAD]", "download", getPid(), "downloaded");
   // ── END DOWNLOAD LOG ─────────────────────────────────────────
 });
