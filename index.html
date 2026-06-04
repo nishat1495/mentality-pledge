@@ -89,6 +89,10 @@ footer p{font-size:var(--xs);color:var(--faint)}
   .card{padding:1.25rem}
   .pitem label{padding:.75rem .875rem}
 }
+
+.share-btn{width:100%;background:var(--border);color:var(--text);padding:.875rem 1.5rem;border-radius:var(--r-full);font-weight:700;font-size:var(--base);display:flex;align-items:center;justify-content:center;gap:.5rem;box-shadow:var(--sh-sm);border:1.5px solid var(--border)}
+.share-btn:hover{background:var(--surface-off);transform:translateY(-1px);box-shadow:var(--sh-md)}
+.copy-confirm{font-size:var(--sm);color:var(--accent-l);font-weight:700;margin-top:.6rem;min-height:1.4em;text-align:center}
 </style>
 </head>
 <body>
@@ -107,7 +111,7 @@ footer p{font-size:var(--xs);color:var(--faint)}
   </button>
 </header>
 <div class="intro">
-  <div class="eyebrow">🤝🏾 Positive Masculinity Initiative</div>
+  <div class="eyebrow"><span style="font-size:1.15em;line-height:1">🤝🏾</span> Positive Masculinity Initiative</div>
   <h1>Your pledge.<br><em>Your commitment.</em></h1>
   <p>Real conversations about manhood don't end here — they begin. Choose the commitments you're ready to keep and receive your personal pledge card.</p>
 </div>
@@ -175,6 +179,13 @@ footer p{font-size:var(--xs);color:var(--faint)}
         Download My Pledge Card
       </button>
     </div>
+    <div class="share-wrap" id="share-wrap" style="display:none;margin-top:1rem">
+      <button class="share-btn" id="copy-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Share This Pledge
+      </button>
+      <p class="copy-confirm" id="copy-confirm"></p>
+    </div>
   </div>
 </div>
 <div class="rct-hidden" aria-hidden="true">
@@ -210,7 +221,7 @@ subBtn.addEventListener("click",function(){
   var payload={type:"mentality_pledge",pledge_taken:"1",pledge_items:chosen.join(","),pledge_count:chosen.length,name:name,ts:new Date().toISOString()};
   if(window.parent&&window.parent!==window){window.parent.postMessage(payload,"*");}
   // ── GOOGLE SHEETS LOGGING ──────────────────────────────────
-  var SHEET_URL="https://script.google.com/macros/s/AKfycbwc8fETXVPO1kN80tk1_qDIBl79w8d0jzSg_k8M9QvNaIJj1Q4acGjHdErXRYt1W2-e/exec";
+  var SHEET_URL="https://script.google.com/macros/s/AKfycbxfHTWAqi1YJ_Vkuwlx9b6dLTqaobSiefZdqWx2pdQlwccIiO7-Wz2oLTWMkoVtFNRx/exec";
   window._pledgeSessionId = Date.now().toString(36) + Math.random().toString(36).substr(2,5);
   window._pledgeName = name;
   window._pledgeItems = chosen.join(", ");
@@ -242,6 +253,8 @@ subBtn.addEventListener("click",function(){
   var ss=document.getElementById("success-state");
   ss.style.display="block";
   document.getElementById("name-display").textContent=name;
+  // Show share button block
+  document.getElementById("share-wrap").style.display="block";
   var lmap={
     emotions:"Have one honest conversation about my feelings with a man I trust",
     fatherhood:"Check in on a younger man in my life and ask how he\u2019s really doing",
@@ -329,12 +342,12 @@ document.getElementById("dl-btn").addEventListener("click",function(){
     a.click();URL.revokeObjectURL(a.href);
   },"image/png");
   // ── LOG DOWNLOAD TO GOOGLE SHEETS ───────────────────────────
-  var SHEET_URL_DL="https://script.google.com/macros/s/AKfycbwc8fETXVPO1kN80tk1_qDIBl79w8d0jzSg_k8M9QvNaIJj1Q4acGjHdErXRYt1W2-e/exec";
-  logToSheet(SHEET_URL_DL, window._pledgeTS||getTS(), window._pledgeName||nm, window._pledgeItems||"", window._pledgeCount||"", window._pledgePid||getPid(), "downloaded", window._pledgeSessionId||"");
+  var SHEET_URL_DL="https://script.google.com/macros/s/AKfycbxfHTWAqi1YJ_Vkuwlx9b6dLTqaobSiefZdqWx2pdQlwccIiO7-Wz2oLTWMkoVtFNRx/exec";
+  logToSheet(SHEET_URL_DL, window._pledgeTS||getTS(), window._pledgeName||nm, window._pledgeItems||"", window._pledgeCount||"", window._pledgePid||getPid(), "downloaded", window._pledgeSessionId||"", "download");
   // ── END DOWNLOAD LOG ─────────────────────────────────────────
 });
 
-function logToSheet(sheetUrl, timestamp, name, items, count, pid, download_status, session_id) {
+function logToSheet(sheetUrl, timestamp, name, items, count, pid, download_status, session_id, event_type) {
   var params = new URLSearchParams();
   params.append("timestamp", timestamp);
   params.append("name", name);
@@ -343,6 +356,7 @@ function logToSheet(sheetUrl, timestamp, name, items, count, pid, download_statu
   params.append("participant_id", pid);
   params.append("download_status", download_status || "not downloaded");
   params.append("session_id", session_id || "");
+  params.append("event_type", event_type || "pledge");
   // sendBeacon works reliably inside VLab/iframe sandboxes; fetch as fallback
   if(navigator.sendBeacon){
     try{
@@ -360,9 +374,53 @@ function getPid() {
   var p = new URLSearchParams(window.location.search);
   return p.get("uid") || p.get("pid") || p.get("participant_id") || p.get("RID") || p.get("respondent_id") || "unknown";
 }
+function getMaskedUrl() {
+  // Strip uid/participant params — return clean base URL only
+  var base = window.location.origin + window.location.pathname;
+  return base;
+}
 function getTS() {
   return new Date().toLocaleString("en-NG", {timeZone:"Africa/Lagos",year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"});
 }
+
+// ── SHARE / COPY LINK ────────────────────────────────────────────────────────
+document.getElementById("copy-btn").addEventListener("click", function(){
+  var url = getMaskedUrl();
+  var confirmEl = document.getElementById("copy-confirm");
+  // Copy to clipboard
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){
+      confirmEl.textContent = "✓ Link copied — share it with a friend!";
+      setTimeout(function(){ confirmEl.textContent = ""; }, 4000);
+    }).catch(function(){
+      fallbackCopy(url, confirmEl);
+    });
+  } else {
+    fallbackCopy(url, confirmEl);
+  }
+  // Log share event to Google Sheets
+  var SHEET_URL_SHARE="https://script.google.com/macros/s/AKfycbxfHTWAqi1YJ_Vkuwlx9b6dLTqaobSiefZdqWx2pdQlwccIiO7-Wz2oLTWMkoVtFNRx/exec";
+  logToSheet(SHEET_URL_SHARE,
+    window._pledgeTS || getTS(),
+    window._pledgeName || "unknown",
+    window._pledgeItems || "",
+    window._pledgeCount || "",
+    window._pledgePid || getPid(),
+    "not downloaded",
+    window._pledgeSessionId || "",
+    "shared"
+  );
+});
+function fallbackCopy(text, confirmEl) {
+  var ta = document.createElement("textarea");
+  ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); confirmEl.textContent = "✓ Link copied — share it with a friend!"; }
+  catch(e){ confirmEl.textContent = "Copy: " + text; }
+  document.body.removeChild(ta);
+  setTimeout(function(){ confirmEl.textContent = ""; }, 4000);
+}
+// ── END SHARE / COPY LINK ────────────────────────────────────────────────────
 </script>
 </body>
 </html>
