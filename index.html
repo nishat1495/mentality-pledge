@@ -107,7 +107,7 @@ footer p{font-size:var(--xs);color:var(--faint)}
   </button>
 </header>
 <div class="intro">
-  <div class="eyebrow">🤝 Positive Masculinity Initiative</div>
+  <div class="eyebrow">🤝🏾 Positive Masculinity Initiative</div>
   <h1>Your pledge.<br><em>Your commitment.</em></h1>
   <p>Real conversations about manhood don't end here — they begin. Choose the commitments you're ready to keep and receive your personal pledge card.</p>
 </div>
@@ -210,7 +210,7 @@ subBtn.addEventListener("click",function(){
   var payload={type:"mentality_pledge",pledge_taken:"1",pledge_items:chosen.join(","),pledge_count:chosen.length,name:name,ts:new Date().toISOString()};
   if(window.parent&&window.parent!==window){window.parent.postMessage(payload,"*");}
   // ── GOOGLE SHEETS LOGGING ──────────────────────────────────
-  var SHEET_URL="https://script.google.com/macros/s/AKfycbygrKdwKxRNbpkNF-ucvCtkd-tT0JgbMbiZTObXAgVzKVBM_cEwUdfyHlBeuG-PmKjA/exec";
+  var SHEET_URL="https://script.google.com/macros/s/AKfycbwc8fETXVPO1kN80tk1_qDIBl79w8d0jzSg_k8M9QvNaIJj1Q4acGjHdErXRYt1W2-e/exec";
   window._pledgeSessionId = Date.now().toString(36) + Math.random().toString(36).substr(2,5);
   window._pledgeName = name;
   window._pledgeItems = chosen.join(", ");
@@ -329,7 +329,7 @@ document.getElementById("dl-btn").addEventListener("click",function(){
     a.click();URL.revokeObjectURL(a.href);
   },"image/png");
   // ── LOG DOWNLOAD TO GOOGLE SHEETS ───────────────────────────
-  var SHEET_URL_DL="https://script.google.com/macros/s/AKfycbygrKdwKxRNbpkNF-ucvCtkd-tT0JgbMbiZTObXAgVzKVBM_cEwUdfyHlBeuG-PmKjA/exec";
+  var SHEET_URL_DL="https://script.google.com/macros/s/AKfycbwc8fETXVPO1kN80tk1_qDIBl79w8d0jzSg_k8M9QvNaIJj1Q4acGjHdErXRYt1W2-e/exec";
   logToSheet(SHEET_URL_DL, window._pledgeTS||getTS(), window._pledgeName||nm, window._pledgeItems||"", window._pledgeCount||"", window._pledgePid||getPid(), "downloaded", window._pledgeSessionId||"");
   // ── END DOWNLOAD LOG ─────────────────────────────────────────
 });
